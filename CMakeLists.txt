@@ -73,15 +73,15 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 find_package(PkgConfig REQUIRED)
 
 
-set(pc_req_public)
+set(required_pkg_libs)
 
 # We need libfizmo >= 0.9.
 pkg_check_modules(LIBFIZMO REQUIRED libfizmo>=0.9.0)
-list(APPEND pc_req_public "libfizmo")
+list(APPEND required_pkg_libs "libfizmo >= 0.9.0")
 
 
 pkg_check_modules(SDL2 REQUIRED sdl2)
-list(APPEND pc_req_public "sdl2")
+list(APPEND required_pkg_libs "sdl2")
 
 
 # Enabling tracing will cause fizmo to write a really, really large amount
@@ -100,7 +100,7 @@ option(ENABLE_AIFF "Enable AIFF" ON)
 if (ENABLE_AIFF)
   add_definitions(-DENABLE_AIFF)
   pkg_check_modules(LIBSNDFILE REQUIRED sndfile)
-  list(APPEND pc_req_public "sndfile")
+  list(APPEND required_pkg_libs "sndfile")
 endif()
 
 
@@ -140,9 +140,9 @@ install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/" # source directory
 
 install(TARGETS libsndifsdl)
 
-
 set(pc_libs_private)
 set(pc_req_private)
+string(REPLACE ";" " " pc_req_public "${required_pkg_libs}")
 configure_file(src/libsndifsdl.pc.in libsndifsdl.pc @ONLY)
 
 
