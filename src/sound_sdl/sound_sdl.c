@@ -957,7 +957,7 @@ void sdl_stop_sound(int UNUSED(sound_nr))
 
   SDL_mutexP(sound_output_active_mutex);
   timer_to_terminate = sdl_finish_timer;
-  if (timer_to_terminate != NULL)
+  if (timer_to_terminate != 0)
   {
     SDL_RemoveTimer(timer_to_terminate);
   }
