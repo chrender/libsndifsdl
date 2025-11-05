@@ -132,7 +132,7 @@ static bool flush_sound_effect_stack = false;
 static bool force_8bit_sound = false;
 static char *config_option_names[] = { "force-8bit-sound", NULL } ;
 
-static SDL_TimerID sdl_finish_timer = NULL;
+static SDL_TimerID sdl_finish_timer = 0;
 
 
 Uint8 tone880hz[] = {
@@ -261,7 +261,7 @@ static void clear_current_effect_from_stack()
   TRACE_LOG("\n\n[sound]Clearing current effect from stack.\n\n");
 
   timer_to_terminate = sdl_finish_timer;
-  if (timer_to_terminate != NULL)
+  if (timer_to_terminate != 0)
   {
     SDL_RemoveTimer(timer_to_terminate);
   }
@@ -283,7 +283,7 @@ static Uint32 sdl_effect_finished(Uint32 UNUSED(interval), void* UNUSED(param))
   TRACE_LOG("\n\n[sound]effect finished on timer.\n\n");
 
   SDL_mutexP(sound_output_active_mutex);
-  sdl_finish_timer = NULL;
+  sdl_finish_timer = 0;
 
   TRACE_LOG("\n\n[sound]effect finished(%d).\n\n", sound_effect_top_element);
   SDL_PauseAudio(1);
@@ -359,7 +359,7 @@ void mixaudio(void *UNUSED(unused), Uint8 *stream, int len)
         {
           SDL_mutexP(sound_output_active_mutex);
 
-          if (sdl_finish_timer == NULL)
+          if (sdl_finish_timer == 0)
           {
             // Wait to complete a full cycle.
             interval
@@ -924,7 +924,8 @@ void sdl_play_sound(int sound_nr, int volume, int repeats, uint16_t routine)
     if (effect_thread == NULL)
     {
       TRACE_LOG("[sound]Creating new effect_thread.\n");
-      effect_thread = SDL_CreateThread(&effect_thread_routine, NULL);
+      effect_thread = SDL_CreateThread(
+          &effect_thread_routine, NULL, (void *)NULL);
     }
     start_next_effect();
     SDL_mutexV(sound_output_active_mutex);
