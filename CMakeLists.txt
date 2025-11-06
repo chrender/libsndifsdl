@@ -121,16 +121,16 @@ set (c_sources
 # Tell CMake we'd like to create a library named "libsndifsdl" with the
 # given ".c" files.
 add_library(libsndifsdl ${c_sources})
-target_include_directories(libsndifsdl PUBLIC ${LIBFIZMO_INCLUDE_DIRS}
-  ${LIBSNDFILE_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
-#target_link_directories(libsndifsdl PUBLIC ${LIBSNDFILE_LIBDIR})
+
+target_include_directories(libsndifsdl PUBLIC
+  ${LIBFIZMO_INCLUDE_DIRS}
+  ${LIBSNDFILE_INCLUDE_DIRS}
+  ${SDL2_INCLUDE_DIRS})
 
 
 #install(TARGETS libsndifsdl)
 # PUBLIC_HEADER cannot be used for TARGETS fizmo, since it doesn't keep
 # the directory tree and installs all *.h flat into "include/". So:
-
-
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/" # source directory
   DESTINATION "include" # target directory
   FILES_MATCHING # install only matched files
